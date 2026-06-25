@@ -78,6 +78,18 @@ main {
   text-decoration: none;
 }
 
+.nav a[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.language-link {
+  padding: 2px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
 .hero {
   display: grid;
   gap: 26px;
@@ -182,6 +194,18 @@ h3 {
   border-radius: 8px;
   background: var(--soft);
   color: var(--muted);
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 24px 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 12px 30px var(--shadow);
 }
 
 .content {

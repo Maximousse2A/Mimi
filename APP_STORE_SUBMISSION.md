@@ -1,6 +1,6 @@
 # Mimi App Store Submission Pack
 
-Prepared on: 2026-06-21  
+Prepared on: 2026-06-25  
 App bundle ID: `com.maxime.cat`  
 Current app version: `1.0`  
 Display name in build: `Mimi`  
@@ -10,24 +10,16 @@ Before publishing the website, replace the support email if you want a dedicated
 
 ## GitHub Pages URLs
 
-The repo does not currently have a GitHub remote configured. If you create the repository as `Maximousse2A/Cat-Translator`, use:
-
-- Marketing URL: `https://maximousse2a.github.io/Cat-Translator/`
-- Support URL: `https://maximousse2a.github.io/Cat-Translator/support.html`
-- Privacy Policy URL: `https://maximousse2a.github.io/Cat-Translator/privacy-policy.html`
-- Privacy Choices URL: `https://maximousse2a.github.io/Cat-Translator/privacy-choices.html`
-- Terms of Use URL: `https://maximousse2a.github.io/Cat-Translator/terms.html`
-
-If the GitHub owner or repo name differs, replace `maximousse2a` and `Cat-Translator`.
+- Marketing URL: `https://maximousse2a.github.io/Mimi/`
+- Support URL: `https://maximousse2a.github.io/Mimi/support.html`
+- Privacy Policy URL: `https://maximousse2a.github.io/Mimi/privacy-policy.html`
+- Privacy Choices URL: `https://maximousse2a.github.io/Mimi/privacy-choices.html`
+- Terms of Use URL: `https://maximousse2a.github.io/Mimi/terms.html`
+- French landing page: `https://maximousse2a.github.io/Mimi/fr/`
 
 GitHub Pages setup:
 
-1. Push the repo to GitHub.
-2. Go to repository Settings > Pages.
-3. Source: `Deploy from a branch`.
-4. Branch: `main` or the release branch.
-5. Folder: `/docs`.
-6. Save and wait for Pages to publish.
+GitHub Pages source: branch `main`, folder `/docs`.
 
 ## Recommended App Information
 
@@ -160,7 +152,7 @@ Use this as the starting point in App Store Connect. Verify provider dashboards 
 
 Recommended answer: No.
 
-Reason: Mimi does not show third-party ads, does not use IDFA for advertising, and does not share data with data brokers in the current code.
+Review this answer against the final Google Mobile Ads and consent configuration. The current app includes banner and interstitial advertising for non-premium users.
 
 ### Data Linked to You
 
@@ -206,7 +198,7 @@ Mimi is a cat signal companion. Users can skip the subscription screen with "Not
 
 ## Submission Checklist Before Screenshots
 
-- Create or confirm the GitHub repo and enable GitHub Pages from `/docs`.
+- Confirm the GitHub Pages URLs above are live.
 - Replace the public support email if needed.
 - Confirm the final public URLs load over HTTPS.
 - Create App Store Connect app record with bundle ID `com.maxime.cat`.

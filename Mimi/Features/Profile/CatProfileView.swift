@@ -139,6 +139,34 @@ struct CatProfileView: View {
                             }
                         }
 
+                        ProfileEditorSection(title: L10n.text("Legal and support")) {
+                            VStack(spacing: 12) {
+                                Link(destination: MimiLegalLinks.support) {
+                                    ProfileSetting(
+                                        icon: "questionmark.circle.fill",
+                                        title: L10n.text("Support"),
+                                        value: L10n.text("Open")
+                                    )
+                                }
+
+                                Link(destination: MimiLegalLinks.privacyPolicy) {
+                                    ProfileSetting(
+                                        icon: "hand.raised.fill",
+                                        title: L10n.text("Privacy policy"),
+                                        value: L10n.text("Open")
+                                    )
+                                }
+
+                                Link(destination: MimiLegalLinks.terms) {
+                                    ProfileSetting(
+                                        icon: "doc.text.fill",
+                                        title: L10n.text("Terms of use"),
+                                        value: L10n.text("Open")
+                                    )
+                                }
+                            }
+                        }
+
 #if DEBUG
                         VStack(spacing: 12) {
                             Button {
@@ -183,6 +211,26 @@ struct CatProfileView: View {
             GridItem(.flexible(), spacing: 10),
             GridItem(.flexible(), spacing: 10)
         ]
+    }
+}
+
+enum MimiLegalLinks {
+    private static let baseURL = "https://maximousse2a.github.io/Mimi"
+
+    private static var usesFrench: Bool {
+        Locale.current.language.languageCode?.identifier == "fr"
+    }
+
+    static var support: URL {
+        URL(string: usesFrench ? "\(baseURL)/fr/assistance.html" : "\(baseURL)/support.html")!
+    }
+
+    static var privacyPolicy: URL {
+        URL(string: usesFrench ? "\(baseURL)/fr/confidentialite.html" : "\(baseURL)/privacy-policy.html")!
+    }
+
+    static var terms: URL {
+        URL(string: usesFrench ? "\(baseURL)/fr/conditions.html" : "\(baseURL)/terms.html")!
     }
 }
 

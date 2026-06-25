@@ -1268,12 +1268,12 @@ private struct PaywallView: View {
                     Text("•")
                     Link(
                         L10n.text("Terms of use"),
-                        destination: URL(string: "https://maximousse2a.github.io/Cat-Translator/terms.html")!
+                        destination: MimiLegalLinks.terms
                     )
                     Text("•")
                     Link(
                         L10n.text("Privacy policy"),
-                        destination: URL(string: "https://maximousse2a.github.io/Cat-Translator/privacy-policy.html")!
+                        destination: MimiLegalLinks.privacyPolicy
                     )
                 }
                 .font(.mimi(size: isCompact ? 9.5 : 10.5, weight: .bold))
