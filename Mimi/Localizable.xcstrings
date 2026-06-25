@@ -1,6 +1,83 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ / %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ / %2$@"
+          }
+        }
+      }
+    },
+    "%@ free trial, then %@ / %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essai gratuit de %1$@, puis %2$@ / %3$@"
+          }
+        }
+      }
+    },
+    "%@ free, then %@ per %@. Auto-renews until canceled in Apple ID settings." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essai gratuit de %1$@, puis %2$@ par %3$@. Renouvellement automatique jusqu’à annulation dans les réglages de l’identifiant Apple."
+          }
+        }
+      }
+    },
+    "%@ per %@. Auto-renews until canceled in Apple ID settings." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ par %2$@. Renouvellement automatique jusqu’à annulation dans les réglages de l’identifiant Apple."
+          }
+        }
+      }
+    },
+    "%d days" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d jours"
+          }
+        }
+      }
+    },
+    "%d months" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d mois"
+          }
+        }
+      }
+    },
+    "%d weeks" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d semaines"
+          }
+        }
+      }
+    },
     "Legal and support" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -19,6 +96,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gérer"
+          }
+        }
+      }
+    },
+    "Prices and subscription terms are provided by Apple." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les prix et conditions d’abonnement sont fournis par Apple."
           }
         }
       }
@@ -74,6 +162,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Assistance"
+          }
+        }
+      }
+    },
+    "Subscribe now" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S’abonner"
+          }
+        }
+      }
+    },
+    "day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jour"
+          }
+        }
+      }
+    },
+    "month" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mois"
+          }
+        }
+      }
+    },
+    "subscription period" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "période d’abonnement"
+          }
+        }
+      }
+    },
+    "week" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "semaine"
+          }
+        }
+      }
+    },
+    "year" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "an"
           }
         }
       }
@@ -732,8 +886,8 @@
       "localizations" : {
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "%d years"
+            "state" : "translated",
+            "value" : "%d ans"
           }
         }
       }

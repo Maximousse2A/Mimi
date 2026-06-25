@@ -1217,7 +1217,7 @@ private struct PaywallView: View {
                         ForEach(PremiumPlan.allCases) { plan in
                             PaywallPlanRow(
                                 plan: plan,
-                                price: store.price(for: plan),
+                                priceLine: store.priceLine(for: plan),
                                 isSelected: selectedPlan == plan,
                                 isCompact: isCompact
                             ) {
@@ -1246,7 +1246,7 @@ private struct PaywallView: View {
                             ProgressView()
                                 .tint(MimiTheme.primaryInk)
                         } else {
-                            Text(selectedPlan.callToAction)
+                            Text(store.callToAction(for: selectedPlan))
                             Image(systemName: "pawprint.fill")
                                 .font(.system(size: 19, weight: .semibold))
                         }
@@ -1263,8 +1263,17 @@ private struct PaywallView: View {
                 .opacity(store.isPurchasing || !store.hasPackage(for: selectedPlan) ? 0.50 : 1)
                 .padding(.horizontal, 18)
 
+                Text(store.purchaseDisclosure(for: selectedPlan))
+                    .font(.mimi(size: isCompact ? 8.5 : 9.5, weight: .medium))
+                    .foregroundStyle(MimiTheme.onSurfaceVariant.opacity(0.76))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(isCompact ? 3 : 2)
+                    .minimumScaleFactor(0.74)
+                    .padding(.horizontal, 24)
+
                 HStack(spacing: isCompact ? 12 : 18) {
                     Button(L10n.text("Restore purchases"), action: restore)
+                        .disabled(store.isPurchasing)
                     Text("•")
                     Link(
                         L10n.text("Terms of use"),
@@ -1280,6 +1289,7 @@ private struct PaywallView: View {
                 .foregroundStyle(MimiTheme.onSurfaceVariant.opacity(0.78))
                 .lineLimit(1)
                 .minimumScaleFactor(0.72)
+                .accessibilityElement(children: .contain)
                 .frame(height: isCompact ? 27 : 31)
                 .padding(.horizontal, 12)
                 .padding(.bottom, isCompact ? 3 : 7)
@@ -1382,7 +1392,7 @@ private struct PaywallBenefit: View {
 
 private struct PaywallPlanRow: View {
     let plan: PremiumPlan
-    let price: String
+    let priceLine: String
     let isSelected: Bool
     let isCompact: Bool
     let action: () -> Void
@@ -1411,7 +1421,7 @@ private struct PaywallPlanRow: View {
                         .foregroundStyle(MimiTheme.onSurface)
                         .lineLimit(1)
 
-                    Text(plan.priceLine(price))
+                    Text(priceLine)
                         .font(.mimi(size: isCompact ? 10.5 : 12, weight: .medium))
                         .foregroundStyle(MimiTheme.onSurfaceVariant.opacity(0.82))
                         .lineLimit(1)
@@ -1461,22 +1471,8 @@ private enum PremiumPlan: String, CaseIterable, Identifiable {
         }
     }
 
-    func priceLine(_ price: String) -> String {
-        switch self {
-        case .annual: L10n.text("7-day free trial, then %@ / year", price)
-        case .monthly: L10n.text("%@ / month", price)
-        }
-    }
-
     var badge: String? {
         self == .annual ? L10n.text("Best Value") : nil
-    }
-
-    var callToAction: String {
-        switch self {
-        case .annual: L10n.text("Start my 7-day trial")
-        case .monthly: L10n.text("Unlock Premium")
-        }
     }
 
     func package(in offering: Offering) -> Package? {
@@ -1492,6 +1488,7 @@ private enum PremiumPlan: String, CaseIterable, Identifiable {
 @MainActor
 private final class PremiumStore: ObservableObject {
     @Published private(set) var packages: [PremiumPlan: Package] = [:]
+    @Published private(set) var introEligibility: [PremiumPlan: IntroEligibilityStatus] = [:]
     @Published private(set) var isPurchasing = false
 
     func loadOfferings() async -> String? {
@@ -1514,19 +1511,75 @@ private final class PremiumStore: ObservableObject {
             }
 
             packages = loadedPackages
+
+            let productIdentifiers = loadedPackages.values.map(\.storeProduct.productIdentifier)
+            let eligibilityByProduct = await Purchases.shared.checkTrialOrIntroDiscountEligibility(
+                productIdentifiers: productIdentifiers
+            )
+            introEligibility = loadedPackages.reduce(into: [:]) { result, entry in
+                result[entry.key] = eligibilityByProduct[entry.value.storeProduct.productIdentifier]?.status
+                    ?? .unknown
+            }
             return nil
         } catch {
             packages = [:]
+            introEligibility = [:]
             return error.localizedDescription
         }
     }
 
-    func price(for plan: PremiumPlan) -> String {
-        packages[plan]?.localizedPriceString ?? L10n.text("Unavailable")
-    }
-
     func hasPackage(for plan: PremiumPlan) -> Bool {
         packages[plan] != nil
+    }
+
+    func priceLine(for plan: PremiumPlan) -> String {
+        guard let package = packages[plan] else {
+            return L10n.text("Unavailable")
+        }
+
+        let price = package.localizedPriceString
+        let renewalPeriod = periodText(package.storeProduct.subscriptionPeriod)
+
+        if let trialPeriod = freeTrialPeriod(for: plan) {
+            return L10n.text(
+                "%@ free trial, then %@ / %@",
+                periodText(trialPeriod.period, multiplier: trialPeriod.multiplier),
+                price,
+                renewalPeriod
+            )
+        }
+
+        return L10n.text("%@ / %@", price, renewalPeriod)
+    }
+
+    func callToAction(for plan: PremiumPlan) -> String {
+        freeTrialPeriod(for: plan) == nil
+            ? L10n.text("Subscribe now")
+            : L10n.text("Start free trial")
+    }
+
+    func purchaseDisclosure(for plan: PremiumPlan) -> String {
+        guard let package = packages[plan] else {
+            return L10n.text("Prices and subscription terms are provided by Apple.")
+        }
+
+        let price = package.localizedPriceString
+        let renewalPeriod = periodText(package.storeProduct.subscriptionPeriod)
+
+        if let trialPeriod = freeTrialPeriod(for: plan) {
+            return L10n.text(
+                "%@ free, then %@ per %@. Auto-renews until canceled in Apple ID settings.",
+                periodText(trialPeriod.period, multiplier: trialPeriod.multiplier),
+                price,
+                renewalPeriod
+            )
+        }
+
+        return L10n.text(
+            "%@ per %@. Auto-renews until canceled in Apple ID settings.",
+            price,
+            renewalPeriod
+        )
     }
 
     func purchase(_ plan: PremiumPlan) async throws -> Bool {
@@ -1566,6 +1619,50 @@ private final class PremiumStore: ObservableObject {
 
     private func hasActiveAccess(_ customerInfo: CustomerInfo) -> Bool {
         !customerInfo.entitlements.active.isEmpty
+    }
+
+    private func freeTrialPeriod(
+        for plan: PremiumPlan
+    ) -> (period: RevenueCat.SubscriptionPeriod, multiplier: Int)? {
+        guard introEligibility[plan] == .eligible,
+              let discount = packages[plan]?.storeProduct.introductoryDiscount,
+              discount.type == .introductory,
+              discount.paymentMode == .freeTrial else {
+            return nil
+        }
+
+        return (discount.subscriptionPeriod, max(discount.numberOfPeriods, 1))
+    }
+
+    private func periodText(
+        _ period: RevenueCat.SubscriptionPeriod?,
+        multiplier: Int = 1
+    ) -> String {
+        guard let period else {
+            return L10n.text("subscription period")
+        }
+
+        let value = period.value * multiplier
+        switch (period.unit, value) {
+        case (.day, 1):
+            return L10n.text("day")
+        case (.week, 1):
+            return L10n.text("week")
+        case (.month, 1):
+            return L10n.text("month")
+        case (.year, 1):
+            return L10n.text("year")
+        case (.day, _):
+            return L10n.text("%d days", value)
+        case (.week, _):
+            return L10n.text("%d weeks", value)
+        case (.month, _):
+            return L10n.text("%d months", value)
+        case (.year, _):
+            return L10n.text("%d years", value)
+        @unknown default:
+            return L10n.text("subscription period")
+        }
     }
 }
 
